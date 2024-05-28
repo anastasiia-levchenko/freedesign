@@ -12,6 +12,27 @@
     <h1 class="text-center my-4">Welcome to Free Design website</h1>
     <a class="btn btn-primary" href="/artworks/create">Add Art Work</a>
 
+    <!-- Button trigger export modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exportModal">
+        Export
+    </button>
+
+    <!-- Export Modal -->
+    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Export Created Art Works</h1>
+                    <button id="close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <a class="btn btn-primary text-right" th:href="@{/artworks/export(exportId='xlsx')}">Export to Excel</a>
+                    <a class="btn btn-primary text-right" th:href="@{/artworks/export(exportId='csv')}">Export to CSV</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <table class="table">
         <thead>
         <tr>
