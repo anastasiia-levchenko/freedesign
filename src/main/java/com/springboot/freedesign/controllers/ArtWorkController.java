@@ -28,10 +28,8 @@ public class ArtWorkController
 	public static final String ARTWORK = "artwork";
 	@Autowired
 	private ArtWorkService artWorkService;
-
 	@Autowired
 	private ImageService imageService;
-
 	@Autowired
 	private ValidatorServiceImpl validatorService;
 

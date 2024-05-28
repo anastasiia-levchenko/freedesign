@@ -23,9 +23,7 @@ public class ArtWork
 	private String name;
 	private BigDecimal price;
 	private boolean wantToSell;
-
 	private String imageFileName;
-
 	@Column(columnDefinition = "TEXT")
 	private String notes;
 
