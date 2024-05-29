@@ -18,15 +18,15 @@
     </button>
 
     <!-- Export Modal -->
-    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Export Created Art Works</h1>
+                    <h1 class="modal-title fs-5" id="exportModalLabel">Export Created Art Works</h1>
                     <button id="close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <a class="btn btn-primary text-right" th:href="@{/artworks/export(exportId='xlsx')}">Export to Excel</a>
+                    <a class="btn btn-primary text-right" th:href="@{/artworks/export(exportId='xlsx')}" >Export to Excel</a>
                     <a class="btn btn-primary text-right" th:href="@{/artworks/export(exportId='csv')}">Export to CSV</a>
                 </div>
             </div>
@@ -56,11 +56,35 @@
                      alt="..." width="100" height="100">
             </td>
             <td style="white-space:nowrap">
-                <a class="btn btn-primary btn-sm"
+                <a class="btn btn-primary"
                    th:href="@{/artworks/edit(id=${artwork.id})}">Edit</a>
-                <a class="btn btn-danger btn-sm"
-                   th:href="@{/artworks/delete(id=${artwork.id})}"
-                   onclick="return confirm('Delete this Artwork?')">Delete</a>
+                <!-- Button trigger export modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        th:attr="data-bs-target='#delete-modal'+${artwork.id}">
+                    Delete
+                </button>
+
+                <!-- Delete Modal -->
+                <div class="modal fade bd-example-modal-sm" th:id="delete-modal+${artwork.id}" tabindex="-1"
+                     aria-labelledby="deleteModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5">Delete this artwork?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div style="margin-left: 20px">
+                                <img th:src="@{'/images/' + ${artwork.imageFileName}}"
+                                     alt="..." width="100" height="100">
+                            </div>
+                            <div class="modal-body">
+                                <a class="btn btn-danger text-right" th:href="@{/artworks/delete(id=${artwork.id})}">Delete</a>
+                                <a class="btn btn-secondary text-right" data-bs-dismiss="modal">Close</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
         </tbody>
