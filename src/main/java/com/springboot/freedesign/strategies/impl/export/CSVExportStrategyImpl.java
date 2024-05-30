@@ -1,5 +1,7 @@
 package com.springboot.freedesign.strategies.impl.export;
 
+import com.springboot.freedesign.common.FreeDesignConstants;
+import com.springboot.freedesign.exceptions.exceptions.ArtWorksExportException;
 import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.services.ArtWorkService;
 import com.springboot.freedesign.strategies.ExportStrategy;
@@ -36,23 +38,31 @@ public class CSVExportStrategyImpl implements ExportStrategy
 	}
 
 	@Override
-	public void export(final HttpServletResponse response) throws IOException
+	public void export(final HttpServletResponse response)
 	{
 		setUpResponse(response);
 
 		final List<ArtWork> artWorks = artWorkService.getCreatedArtWorks();
-		final ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
 
 		final String[] csvHeader = { "ID", "Name", "Price", "Wish to sell", "Image Name", "Notes" };
 		final String[] nameMapping = { "id", "name", "price", "wantToSell", "imageFileName", "notes" };
 
-		csvWriter.writeHeader(csvHeader);
-
-		for (final ArtWork artWork : artWorks)
+		try
 		{
-			csvWriter.write(artWork, nameMapping);
-		}
+			final ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
 
-		csvWriter.close();
+			csvWriter.writeHeader(csvHeader);
+
+			for (final ArtWork artWork : artWorks)
+			{
+				csvWriter.write(artWork, nameMapping);
+			}
+
+			csvWriter.close();
+		}
+		catch (final IOException ex)
+		{
+			throw new ArtWorksExportException(FreeDesignConstants.EXPORT_ERROR, ex);
+		}
 	}
 }

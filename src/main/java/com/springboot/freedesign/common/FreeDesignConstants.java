@@ -12,6 +12,13 @@ public class FreeDesignConstants
 	//Validation
 	public static final String VALIDATION_EMPTY_FIELD = "This field is required";
 	public static final String VALIDATION_TEXT_SIZE_EXCEEDS = "This field cannot contain more than this amount of characters: ";
-	public static final String PRICE_ERROR_MESSAGE = "Please enter a valid price";
+	public static final String VALIDATION_PRICE_ERROR = "Please enter a valid price";
+
+	// Exception messages
+	public static final String GENERAL_EXCEPTION = "An unexpected error occurred, please check the logs for more information";
+	public static final String NO_RESOURCE_FOUND = "No resource found";
+	public static final String NO_STRATEGY_FOUND = "No export strategy found by the provided identifier";
+	public static final String ART_WORK_NOT_FOUND =  "Art Work was not found by the provided Id";
+	public static final String EXPORT_ERROR = "Something went wrong while exporting the Art Works";
 
 }

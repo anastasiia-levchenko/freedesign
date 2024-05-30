@@ -18,7 +18,7 @@ public class ArtWorkDTO
 	@NotEmpty(message = FreeDesignConstants.VALIDATION_EMPTY_FIELD)
 	private String name;
 	@Min(0)
-	@NotNull(message = FreeDesignConstants.PRICE_ERROR_MESSAGE)
+	@NotNull(message = FreeDesignConstants.VALIDATION_PRICE_ERROR)
 	private BigDecimal price;
 
 	private boolean wantToSell;

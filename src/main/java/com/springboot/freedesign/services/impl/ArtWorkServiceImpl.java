@@ -1,7 +1,9 @@
 package com.springboot.freedesign.services.impl;
 
 import com.springboot.freedesign.DTO.ArtWorkDTO;
+import com.springboot.freedesign.common.FreeDesignConstants;
 import com.springboot.freedesign.dao.ArtWorkDAO;
+import com.springboot.freedesign.exceptions.exceptions.ArtWorkNotFoundException;
 import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.populators.ArtWorkPopulator;
 import com.springboot.freedesign.services.ArtWorkService;
@@ -39,7 +41,8 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	@Override
 	public ArtWork findById(final String id)
 	{
-		return artWorkDAO.findById(Integer.valueOf(id)).get();
+		return artWorkDAO.findById(Integer.valueOf(id))
+				.orElseThrow(() -> new ArtWorkNotFoundException(FreeDesignConstants.ART_WORK_NOT_FOUND));
 	}
 
 	@Override

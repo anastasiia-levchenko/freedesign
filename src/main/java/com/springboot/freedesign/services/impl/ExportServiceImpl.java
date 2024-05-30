@@ -17,7 +17,7 @@ public class ExportServiceImpl implements ExportService
 	private ExportStrategyFactory exportStrategyFactory;
 
 	@Override
-	public void export(final HttpServletResponse response, final String exportId) throws IOException
+	public void export(final HttpServletResponse response, final String exportId)
 	{
 		final ExportStrategy exportStrategy = exportStrategyFactory.obtainStrategyByIdentifier(exportId);
 

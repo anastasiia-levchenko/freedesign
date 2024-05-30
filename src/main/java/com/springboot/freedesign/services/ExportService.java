@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface ExportService
 {
-	void export(final HttpServletResponse response, final String exportId) throws IOException;
+	void export(final HttpServletResponse response, final String exportId);
 }
