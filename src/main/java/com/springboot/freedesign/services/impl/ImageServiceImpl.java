@@ -2,6 +2,8 @@ package com.springboot.freedesign.services.impl;
 
 import com.springboot.freedesign.common.FreeDesignConstants;
 import com.springboot.freedesign.services.ImageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +19,13 @@ import java.util.Date;
 @Service
 public class ImageServiceImpl implements ImageService
 {
+	private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+
 	@Override
 	public String getGeneratedFileNameForImage(final String originalFilename)
 	{
+		logger.info(FreeDesignConstants.GENERATE_IMAGE_NAME);
+
 		return new Date().getTime() + "_" + originalFilename;
 	}
 
@@ -28,6 +34,8 @@ public class ImageServiceImpl implements ImageService
 	{
 		try
 		{
+			logger.info(FreeDesignConstants.SAVING_IMAGE);
+
 			final String uploadDir = "public/images/";
 			final Path uploadPath = Paths.get(uploadDir);
 
@@ -40,9 +48,8 @@ public class ImageServiceImpl implements ImageService
 		}
 		catch (final IOException ex)
 		{
-			System.out.println("Could not save image file");
+			logger.error(FreeDesignConstants.IMAGE_SAVE_FAIL);
 		}
-
 	}
 
 	public void deleteArtWorkRelatedImage(final String imageFileName)
@@ -51,11 +58,13 @@ public class ImageServiceImpl implements ImageService
 
 		try
 		{
+			logger.info(FreeDesignConstants.DELETING_RELATED_IMAGE);
 			Files.delete(pathToImage);
 		}
 		catch (final IOException ex)
 		{
-			System.out.println("Could not delete the image file or the file is absent");
+			logger.error(FreeDesignConstants.IMAGE_DELETION_FAIL);
+			System.out.println();
 		}
 	}
 

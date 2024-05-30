@@ -7,6 +7,8 @@ import com.springboot.freedesign.services.ArtWorkService;
 import com.springboot.freedesign.services.ImageService;
 import com.springboot.freedesign.services.impl.ValidatorServiceImpl;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +26,10 @@ import java.util.List;
 @RequestMapping("/artworks")
 public class ArtWorkController
 {
-	public static final String ART_WORK_DTO = "artWorkDTO";
-	public static final String ARTWORK = "artwork";
-	public static final String ID = "id";
+	private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+	private static final String ART_WORK_DTO = "artWorkDTO";
+	private static final String ARTWORK = "artwork";
+	private static final String ID = "id";
 
 	@Autowired
 	private ArtWorkService artWorkService;
@@ -38,6 +41,8 @@ public class ArtWorkController
 	@GetMapping({ "", "/" })
 	public String getAllCreatedArtWorks(final Model model)
 	{
+		logger.info(FreeDesignConstants.GETTING_ARTWORKS);
+
 		final List<ArtWork> artWorks = artWorkService.getCreatedArtWorks();
 		model.addAttribute("artworks", artWorks);
 
@@ -47,6 +52,7 @@ public class ArtWorkController
 	@GetMapping("/delete")
 	public String deleteById(final Model model, @RequestParam(name = ID) final String id)
 	{
+		logger.info(String.format(FreeDesignConstants.DELETING_ARTWORK, id));
 
 		final ArtWork artWorkToDelete = artWorkService.findById(id);
 
@@ -59,6 +65,8 @@ public class ArtWorkController
 	@GetMapping("/create")
 	public String newArtWorkCreationPage(final Model model)
 	{
+		logger.info(FreeDesignConstants.LAUNCH_CREATE_PAGE);
+
 		createEmptyTemplate(model);
 
 		return FreeDesignConstants.CREATE_ART_WORK_PAGE;
@@ -67,13 +75,17 @@ public class ArtWorkController
 	@PostMapping("/create")
 	public String createArtWork(@Valid @ModelAttribute final ArtWorkDTO artWorksDTO, BindingResult result)
 	{
+		logger.info(FreeDesignConstants.VALIDATE_ARTWORK_ATTRIBUTES);
+
 		final BindingResult validationResult = validatorService.validateCreatedArtWork(result, artWorksDTO);
+
 		return validationResult.hasErrors() ? FreeDesignConstants.CREATE_ART_WORK_PAGE : createNewArtWork(artWorksDTO);
 	}
 
 	@GetMapping("/edit")
 	public String editArtWorkPage(final Model model, @RequestParam(name = ID) final String id)
 	{
+		logger.info(FreeDesignConstants.LAUNCHING_EDIT_PAGE);
 
 		final ArtWork artWorkToUpdate = artWorkService.findById(id);
 		final ArtWorkDTO dto = artWorkService.getCreatedDtoForArtWork(artWorkToUpdate);
@@ -88,6 +100,8 @@ public class ArtWorkController
 	public String editArtWork(@Valid @ModelAttribute final ArtWorkDTO artWorksDTO, BindingResult result, Model model,
 			@RequestParam(name = ID) final String id)
 	{
+		logger.info(String.format(FreeDesignConstants.TRYING_TO_UPDATE, id));
+
 		final ArtWork artWorkToUpdate = artWorkService.findById(id);
 		model.addAttribute(ARTWORK, artWorkToUpdate);
 
@@ -96,6 +110,8 @@ public class ArtWorkController
 
 	private String editWorkArt(final ArtWork artWorkToUpdate, final ArtWorkDTO artWorksDTO)
 	{
+		logger.info(String.format(FreeDesignConstants.UPDATING_ARTWORK, artWorkToUpdate.getId()));
+
 		if (isArtWorkImageBeingUpdated(artWorksDTO))
 		{
 			imageService.deleteArtWorkRelatedImage(artWorkToUpdate.getImageFileName());
@@ -124,6 +140,8 @@ public class ArtWorkController
 
 	private String createNewArtWork(final ArtWorkDTO artWorksDTO)
 	{
+		logger.info(FreeDesignConstants.CREATING_NEW_ART_WORK);
+
 		artWorkService.populateAndSaveArtWork(artWorksDTO, new ArtWork());
 
 		return FreeDesignConstants.REDIRECT_ARTWORKS_PAGE;

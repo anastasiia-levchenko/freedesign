@@ -7,6 +7,8 @@ import com.springboot.freedesign.exceptions.exceptions.ArtWorkNotFoundException;
 import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.populators.ArtWorkPopulator;
 import com.springboot.freedesign.services.ArtWorkService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @Service
 public class ArtWorkServiceImpl implements ArtWorkService
 {
+	private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 	@Autowired
 	private ArtWorkDAO artWorkDAO;
 
@@ -33,6 +36,8 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	@Override
 	public void deleteById(final String id)
 	{
+		logger.info(String.format(FreeDesignConstants.DELETING_ARTWORK, id));
+
 		final int artworkId = Integer.parseInt(id);
 
 		artWorkDAO.deleteById(artworkId);
@@ -59,11 +64,15 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	{
 		artWorkPopulator.populateArtWorkForDTO(artWorkDTO, artWork);
 
+		logger.info(String.format(FreeDesignConstants.SAVING_UPDATED_ARTWORK, artWork.getId()));
+
 		artWorkDAO.save(artWork);
 	}
 
 	private void saveArtWork(final ArtWorkDTO artWorkDTO, final ArtWork artWork)
 	{
+		logger.info(String.format(FreeDesignConstants.SAVING_ARTWORK, artWork.getId()));
+
 		imageService.saveImage(artWork.getImageFileName(), artWorkDTO.getImageFile());
 
 		artWorkDAO.save(artWork);
