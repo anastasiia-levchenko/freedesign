@@ -6,6 +6,8 @@ import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.services.ArtWorkService;
 import com.springboot.freedesign.strategies.ExportStrategy;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.supercsv.io.CsvBeanWriter;
@@ -19,6 +21,7 @@ import java.util.List;
 @Component
 public class CSVExportStrategyImpl implements ExportStrategy
 {
+	private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 	public static final String EXTENSION_NAME = "csv";
 	public static final String CONTENT_TYPE = "text/csv";
 
@@ -40,6 +43,7 @@ public class CSVExportStrategyImpl implements ExportStrategy
 	@Override
 	public void export(final HttpServletResponse response)
 	{
+		logger.info(FreeDesignConstants.EXPORTING_ARTWORKS);
 		setUpResponse(response);
 
 		final List<ArtWork> artWorks = artWorkService.getCreatedArtWorks();
