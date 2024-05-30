@@ -1,5 +1,7 @@
 package com.springboot.freedesign.strategies.impl.export;
 
+import com.springboot.freedesign.common.FreeDesignConstants;
+import com.springboot.freedesign.exceptions.exceptions.ArtWorksExportException;
 import com.springboot.freedesign.factories.CellValueFactory;
 import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.services.ArtWorkService;
@@ -49,17 +51,24 @@ public class ExcelExportStrategyImpl implements ExportStrategy
 	}
 
 	@Override
-	public void export(final HttpServletResponse response) throws IOException
+	public void export(final HttpServletResponse response)
 	{
 		setUpResponse(response);
 		writeHeaderLine();
 		writeDataLines();
 
-		final OutputStream outputStream = response.getOutputStream();
+		try
+		{
+			final OutputStream outputStream = response.getOutputStream();
 
-		workbook.write(outputStream);
-		workbook.close();
-		outputStream.close();
+			workbook.write(outputStream);
+			workbook.close();
+			outputStream.close();
+		}
+		catch (final IOException ex)
+		{
+			throw new ArtWorksExportException(FreeDesignConstants.EXPORT_ERROR, ex);
+		}
 	}
 
 	private void writeHeaderLine()

@@ -1,5 +1,7 @@
 package com.springboot.freedesign.factories.impl;
 
+import com.springboot.freedesign.common.FreeDesignConstants;
+import com.springboot.freedesign.exceptions.exceptions.NoExportStrategyFoundException;
 import com.springboot.freedesign.factories.ExportStrategyFactory;
 import com.springboot.freedesign.strategies.ExportStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ public class ExportStrategyFactoryImpl implements ExportStrategyFactory
 	@Override
 	public ExportStrategy obtainStrategyByIdentifier(final String identifier)
 	{
-		return exportStrategies.stream().filter(strategy -> strategy.getExtensionName().equals(identifier)).findFirst().get();
+		return exportStrategies.stream().filter(strategy -> strategy.getExtensionName().equals(identifier)).findFirst()
+				.orElseThrow(() -> new NoExportStrategyFoundException(FreeDesignConstants.NO_STRATEGY_FOUND));
 	}
 }

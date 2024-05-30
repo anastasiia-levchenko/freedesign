@@ -15,7 +15,7 @@ public interface ExportStrategy
 
 	String getContentType();
 
-	void export(final HttpServletResponse response) throws IOException;
+	void export(final HttpServletResponse response);
 
 	default void setUpResponse(final HttpServletResponse response)
 	{

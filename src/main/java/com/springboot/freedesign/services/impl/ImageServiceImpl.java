@@ -38,9 +38,9 @@ public class ImageServiceImpl implements ImageService
 				Files.copy(inputStream, Paths.get(uploadDir + updatedFileName), StandardCopyOption.REPLACE_EXISTING);
 			}
 		}
-		catch (IOException e)
+		catch (final IOException ex)
 		{
-			System.out.println("Exception");
+			System.out.println("Could not save image file");
 		}
 
 	}
@@ -53,9 +53,9 @@ public class ImageServiceImpl implements ImageService
 		{
 			Files.delete(pathToImage);
 		}
-		catch (Exception ex)
+		catch (final IOException ex)
 		{
-			System.out.println("Could not delete the file or the file is absent");
+			System.out.println("Could not delete the image file or the file is absent");
 		}
 	}
 

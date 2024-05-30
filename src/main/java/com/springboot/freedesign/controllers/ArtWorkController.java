@@ -26,6 +26,8 @@ public class ArtWorkController
 {
 	public static final String ART_WORK_DTO = "artWorkDTO";
 	public static final String ARTWORK = "artwork";
+	public static final String ID = "id";
+
 	@Autowired
 	private ArtWorkService artWorkService;
 	@Autowired
@@ -43,9 +45,11 @@ public class ArtWorkController
 	}
 
 	@GetMapping("/delete")
-	public String deleteById(final Model model, @RequestParam(name = "id") final String id)
+	public String deleteById(final Model model, @RequestParam(name = ID) final String id)
 	{
+
 		final ArtWork artWorkToDelete = artWorkService.findById(id);
+
 		imageService.deleteArtWorkRelatedImage(artWorkToDelete.getImageFileName());
 		artWorkService.deleteById(id);
 
@@ -67,30 +71,22 @@ public class ArtWorkController
 		return validationResult.hasErrors() ? FreeDesignConstants.CREATE_ART_WORK_PAGE : createNewArtWork(artWorksDTO);
 	}
 
-	//TODO
-	// Add proper Exception handling
 	@GetMapping("/edit")
-	public String editArtWorkPage(final Model model, @RequestParam(name = "id") final String id)
+	public String editArtWorkPage(final Model model, @RequestParam(name = ID) final String id)
 	{
-		try
-		{
-			final ArtWork artWorkToUpdate = artWorkService.findById(id);
 
-			final ArtWorkDTO dto = artWorkService.getCreatedDtoForArtWork(artWorkToUpdate);
-			model.addAttribute(ART_WORK_DTO, dto);
-			model.addAttribute(ARTWORK, artWorkToUpdate);
-		}
-		catch (final Exception ex)
-		{
-			System.out.println("Exception: " + ex.getMessage());
-			return FreeDesignConstants.REDIRECT_ARTWORKS_PAGE;
-		}
+		final ArtWork artWorkToUpdate = artWorkService.findById(id);
+		final ArtWorkDTO dto = artWorkService.getCreatedDtoForArtWork(artWorkToUpdate);
+
+		model.addAttribute(ART_WORK_DTO, dto);
+		model.addAttribute(ARTWORK, artWorkToUpdate);
+
 		return FreeDesignConstants.EDIT_ART_WORK_PAGE;
 	}
 
 	@PostMapping("/edit")
 	public String editArtWork(@Valid @ModelAttribute final ArtWorkDTO artWorksDTO, BindingResult result, Model model,
-			@RequestParam(name = "id") final String id)
+			@RequestParam(name = ID) final String id)
 	{
 		final ArtWork artWorkToUpdate = artWorkService.findById(id);
 		model.addAttribute(ARTWORK, artWorkToUpdate);

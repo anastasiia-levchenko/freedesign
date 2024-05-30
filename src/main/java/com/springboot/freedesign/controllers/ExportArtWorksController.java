@@ -21,7 +21,6 @@ public class ExportArtWorksController
 
 	@GetMapping
 	public void exportArtWorks(final HttpServletResponse response, @RequestParam(name = "exportId") final String exportId)
-			throws IOException
 	{
 		exportService.export(response, exportId);
 	}
