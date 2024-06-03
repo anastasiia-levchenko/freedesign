@@ -20,6 +20,7 @@ public class FreeDesignConstants
 	public static final String NO_STRATEGY_FOUND = "No export strategy found by the provided identifier";
 	public static final String ART_WORK_NOT_FOUND = "Art Work was not found by the provided Id";
 	public static final String EXPORT_ERROR = "Something went wrong while exporting the Art Works";
+	public static final String PARSING_FAILED = "Failed to parse the provided data";
 
 	// Logger messages
 

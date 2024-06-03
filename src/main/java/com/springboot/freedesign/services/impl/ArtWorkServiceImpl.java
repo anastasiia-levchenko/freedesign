@@ -4,6 +4,7 @@ import com.springboot.freedesign.DTO.ArtWorkDTO;
 import com.springboot.freedesign.common.FreeDesignConstants;
 import com.springboot.freedesign.dao.ArtWorkDAO;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkNotFoundException;
+import com.springboot.freedesign.exceptions.exceptions.ArtWorkParsingException;
 import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.populators.ArtWorkPopulator;
 import com.springboot.freedesign.services.ArtWorkService;
@@ -28,6 +29,7 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	@Autowired
 	private ImageServiceImpl imageService;
 
+	@Override
 	public List<ArtWork> getCreatedArtWorks()
 	{
 		return artWorkDAO.findAll();
@@ -38,7 +40,7 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	{
 		logger.info(String.format(FreeDesignConstants.DELETING_ARTWORK, id));
 
-		final int artworkId = Integer.parseInt(id);
+		final int artworkId = getParsedId(id);
 
 		artWorkDAO.deleteById(artworkId);
 	}
@@ -46,7 +48,7 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	@Override
 	public ArtWork findById(final String id)
 	{
-		return artWorkDAO.findById(Integer.valueOf(id))
+		return artWorkDAO.findById(getParsedId(id))
 				.orElseThrow(() -> new ArtWorkNotFoundException(FreeDesignConstants.ART_WORK_NOT_FOUND));
 	}
 
@@ -69,6 +71,16 @@ public class ArtWorkServiceImpl implements ArtWorkService
 		artWorkDAO.save(artWork);
 	}
 
+	@Override
+	public ArtWorkDTO getCreatedDtoForArtWork(final ArtWork artWork)
+	{
+		final ArtWorkDTO artWorkDTO = new ArtWorkDTO();
+
+		artWorkPopulator.populateDtoForArkWork(artWorkDTO, artWork);
+
+		return artWorkDTO;
+	}
+
 	private void saveArtWork(final ArtWorkDTO artWorkDTO, final ArtWork artWork)
 	{
 		logger.info(String.format(FreeDesignConstants.SAVING_ARTWORK, artWork.getId()));
@@ -78,12 +90,19 @@ public class ArtWorkServiceImpl implements ArtWorkService
 		artWorkDAO.save(artWork);
 	}
 
-	@Override
-	public ArtWorkDTO getCreatedDtoForArtWork(final ArtWork artWork)
+	private int getParsedId(final String id)
 	{
-		final ArtWorkDTO artWorkDTO = new ArtWorkDTO();
-		artWorkPopulator.populateDtoForArkWork(artWorkDTO, artWork);
+		final int artworkId;
 
-		return artWorkDTO;
+		try
+		{
+			artworkId = Integer.parseInt(id);
+		}
+		catch (final NumberFormatException ex)
+		{
+			logger.error(ex.getMessage());
+			throw new ArtWorkParsingException(ex.getMessage());
+		}
+		return artworkId;
 	}
 }

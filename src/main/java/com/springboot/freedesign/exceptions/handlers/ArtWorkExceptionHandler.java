@@ -2,6 +2,7 @@ package com.springboot.freedesign.exceptions.handlers;
 
 import com.springboot.freedesign.common.FreeDesignConstants;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkNotFoundException;
+import com.springboot.freedesign.exceptions.exceptions.ArtWorkParsingException;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorksExportException;
 import com.springboot.freedesign.exceptions.exceptions.NoExportStrategyFoundException;
 import org.slf4j.Logger;
@@ -40,6 +41,12 @@ public class ArtWorkExceptionHandler
 	public ResponseEntity<String> handleArtWorksExportException(final ArtWorksExportException ex)
 	{
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(ArtWorkParsingException.class)
+	public ResponseEntity<String> handleArtWorksWrongFormatException(final ArtWorkParsingException ex)
+	{
+		return new ResponseEntity<>(FreeDesignConstants.PARSING_FAILED, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(Exception.class)
