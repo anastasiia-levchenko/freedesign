@@ -43,4 +43,5 @@ public class FreeDesignConstants
 	public static final String GENERATE_IMAGE_NAME = "Generating a new image name for the Art Work";
 	public static final String EXPORTING_ARTWORKS = "Exporting Art Works";
 	public static final String START_EXPORT = "Starting exporting all created Art Works in format: %s";
+	public static final String DELETING_ALL_ARTWORKS = "Deleting all Art Works";
 }

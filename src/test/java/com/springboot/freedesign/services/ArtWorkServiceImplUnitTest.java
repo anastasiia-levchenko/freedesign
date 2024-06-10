@@ -16,13 +16,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,6 +77,25 @@ public class ArtWorkServiceImplUnitTest
 		assertThrows(ArtWorkParsingException.class, () -> {
 			artWorkService.deleteById(testIdString);
 		});
+	}
+
+	@Test
+	public void verifyDeleteAllDaoMethodWasCalledTest()
+	{
+		artWorkService.deleteAll();
+
+		verify(artWorkDAO).deleteAll();
+	}
+
+	@Test
+	public void verifyImagesDeleteMethodWasCalledThreeTimesTest()
+	{
+		when(artWorkDAO.findAll()).thenReturn(
+				Arrays.asList(getArtWorkWithImageName(), getArtWorkWithImageName(), getArtWorkWithImageName()));
+
+		artWorkService.deleteAll();
+
+		verify(imageService, times(3)).deleteArtWorkRelatedImage(anyString());
 	}
 
 	@Test
@@ -142,6 +164,16 @@ public class ArtWorkServiceImplUnitTest
 		artWorkService.getCreatedDtoForArtWork(artWorkParam);
 
 		verify(artWorkPopulator).populateDtoForArkWork(isA(ArtWorkDTO.class), eq(artWorkParam));
+	}
+
+
+	private ArtWork getArtWorkWithImageName()
+	{
+		final ArtWork artWork = new ArtWork();
+
+		artWork.setImageFileName("");
+
+		return artWork;
 	}
 
 }
