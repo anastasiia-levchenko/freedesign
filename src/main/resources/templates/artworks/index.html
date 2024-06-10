@@ -11,6 +11,7 @@
 </head>
 <body>
 <div class="container">
+
     <h1 class="text-center my-4">Welcome to Free Design website</h1>
     <div sec:authorize="isAuthenticated()">
         Welcome, <span sec:authentication="name"/>
@@ -18,6 +19,30 @@
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Logout"/>
     </form>
+
+    <!-- Button trigger delete all modal -->
+    <button type="button" th:disabled="${artworks.empty}" class="btn btn-danger float-end" data-bs-toggle="modal"
+            data-bs-target="#deleteAllModal">
+        Delete all
+    </button>
+
+    <!-- Delete All Modal -->
+    <div class="modal fade bd-example-modal-sm" id="deleteAllModal" tabindex="-1" aria-labelledby="deleteAllModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteAllModalLabel">Delete all created Art Works?</h1>
+                    <button id="closeDeleteAll" type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <a class="btn btn-primary text-right" th:href="@{/artworks/deleteAll}">Proceed</a>
+                    <a class="btn btn-secondary text-right" data-bs-dismiss="modal">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <a class="btn btn-primary" href="/artworks/create">Add Art Work</a>
 
     <!-- Button trigger export modal -->
@@ -66,7 +91,8 @@
             <td style="white-space:nowrap">
                 <a class="btn btn-primary"
                    th:href="@{/artworks/edit(id=${artwork.id})}">Edit</a>
-                <!-- Button trigger export modal -->
+
+                <!-- Button trigger delete modal -->
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                         th:attr="data-bs-target='#delete-modal'+${artwork.id}">
                     Delete
@@ -87,7 +113,8 @@
                                      alt="..." width="100" height="100">
                             </div>
                             <div class="modal-body">
-                                <a class="btn btn-danger text-right" th:href="@{/artworks/delete(id=${artwork.id})}">Delete</a>
+                                <a class="btn btn-danger text-right"
+                                   th:href="@{/artworks/delete(id=${artwork.id})}">Delete</a>
                                 <a class="btn btn-secondary text-right" data-bs-dismiss="modal">Close</a>
                             </div>
                         </div>

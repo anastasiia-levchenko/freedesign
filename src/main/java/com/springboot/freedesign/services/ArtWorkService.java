@@ -19,4 +19,6 @@ public interface ArtWorkService
 	ArtWorkDTO getCreatedDtoForArtWork(final ArtWork artWork);
 
 	void updateArtWorkNoNewImage(final ArtWorkDTO artWorkDTO, final ArtWork artWork);
+
+	void deleteAll();
 }
