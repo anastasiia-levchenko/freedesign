@@ -62,6 +62,16 @@ public class ArtWorkController
 		return FreeDesignConstants.REDIRECT_ARTWORKS_PAGE;
 	}
 
+	@GetMapping("/deleteAll")
+	public String deleteAll()
+	{
+		logger.info(FreeDesignConstants.DELETING_ALL_ARTWORKS);
+
+		artWorkService.deleteAll();
+
+		return FreeDesignConstants.REDIRECT_ARTWORKS_PAGE;
+	}
+
 	@GetMapping("/create")
 	public String newArtWorkCreationPage(final Model model)
 	{

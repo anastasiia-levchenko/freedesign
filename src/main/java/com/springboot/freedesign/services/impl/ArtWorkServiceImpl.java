@@ -9,6 +9,7 @@ import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.populators.ArtWorkPopulator;
 import com.springboot.freedesign.security.MyUserDetails;
 import com.springboot.freedesign.services.ArtWorkService;
+import com.springboot.freedesign.services.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	private ArtWorkPopulator artWorkPopulator;
 
 	@Autowired
-	private ImageServiceImpl imageService;
+	private ImageService imageService;
 
 	@Override
 	public List<ArtWork> getCreatedArtWorks()
@@ -52,6 +53,13 @@ public class ArtWorkServiceImpl implements ArtWorkService
 		final int artworkId = getParsedId(id);
 
 		artWorkDAO.deleteById(artworkId);
+	}
+
+	@Override
+	public void deleteAll()
+	{
+		deleteImagesByArtWorks(artWorkDAO.findAll());
+		artWorkDAO.deleteAll();
 	}
 
 	@Override
@@ -113,5 +121,10 @@ public class ArtWorkServiceImpl implements ArtWorkService
 			throw new ArtWorkParsingException(ex.getMessage());
 		}
 		return artworkId;
+	}
+
+	private void deleteImagesByArtWorks(final List<ArtWork> artWorks)
+	{
+		artWorks.forEach(artWork -> imageService.deleteArtWorkRelatedImage(artWork.getImageFileName()));
 	}
 }
