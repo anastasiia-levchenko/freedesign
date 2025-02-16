@@ -64,7 +64,6 @@ public class ImageServiceImpl implements ImageService
 		catch (final IOException ex)
 		{
 			logger.error(FreeDesignConstants.IMAGE_DELETION_FAIL);
-			System.out.println();
 		}
 	}
 

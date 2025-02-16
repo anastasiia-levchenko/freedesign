@@ -4,7 +4,7 @@ public class FreeDesignConstants
 {
 	//Art works
 	public static final String PATH_TO_IMAGES = "public/images/";
-	public static final String ARTWORKS_PAGE = "artworks/index";
+	public static final String ARTWORKS_PAGE = "artworks/userHome";
 	public static final String CREATE_ART_WORK_PAGE = "artworks/create";
 	public static final String EDIT_ART_WORK_PAGE = "artworks/edit";
 	public static final String REDIRECT_ARTWORKS_PAGE = "redirect:/artworks";
