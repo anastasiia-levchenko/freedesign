@@ -5,7 +5,9 @@ import com.springboot.freedesign.dao.ArtWorkDAO;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkNotFoundException;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkParsingException;
 import com.springboot.freedesign.models.ArtWork;
+import com.springboot.freedesign.models.User;
 import com.springboot.freedesign.populators.ArtWorkPopulator;
+import com.springboot.freedesign.security.MyUserDetails;
 import com.springboot.freedesign.services.impl.ArtWorkServiceImpl;
 import com.springboot.freedesign.services.impl.ImageServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
@@ -38,24 +43,42 @@ public class ArtWorkServiceImplUnitTest
 	private ArtWorkServiceImpl artWorkService;
 
 	@Mock
-	private ArtWorkDAO artWorkDAO;
-	@Mock
-	private ArtWorkPopulator artWorkPopulator;
+	private UserService userService;
 	@Mock
 	private ImageServiceImpl imageService;
+
+	@Mock
+	private ArtWorkDAO artWorkDAO;
+	@Mock
+	private ArtWorkDTO artWorkDTO;
+
+	@Mock
+	private ArtWorkPopulator artWorkPopulator;
+
+	@Mock
+	private User user;
 	@Mock
 	private ArtWork artWork;
 	@Mock
-	private ArtWorkDTO artWorkDTO;
-	@Mock
 	private MultipartFile file;
 
+	@Mock
+	private Authentication auth;
+	@Mock
+	private SecurityContext context;
+	@Mock
+	private MyUserDetails myUserDetails;
+
 	@Test
-	public void verifyArtWorkDaoWasCalledTest()
+	public void verifyArtWorkDaoFindByUserIdWasCalledTest()
 	{
+		final int expectedUserId = 1;
+
+		setUpSecurityContext(expectedUserId);
+
 		artWorkService.getCreatedArtWorks();
 
-		verify(artWorkDAO).findAll();
+		verify(artWorkDAO).findByUserId(anyInt());
 	}
 
 	@Test
@@ -77,6 +100,44 @@ public class ArtWorkServiceImplUnitTest
 		assertThrows(ArtWorkParsingException.class, () -> {
 			artWorkService.deleteById(testIdString);
 		});
+	}
+
+	@Test
+	public void checkArtWorkNotFoundByUserIdThrowExceptionTest()
+	{
+		final int userId = 1;
+
+		when(artWorkDAO.findById(userId)).thenReturn(Optional.empty());
+
+		assertThrows(ArtWorkNotFoundException.class, () -> {
+			artWorkService.findById(String.valueOf(userId));
+		});
+	}
+
+	@Test
+	public void checkArtWorkFoundByUserIdTest()
+	{
+		final int userId = 1;
+
+		when(artWorkDAO.findById(userId)).thenReturn(Optional.of(artWork));
+
+		assertEquals(artWork, artWorkService.findById(String.valueOf(userId)));
+	}
+
+	@Test
+	public void verifyNewArtWorkPopulatedAndSavedTest()
+	{
+		final String fileName = "fileName";
+		final int expectedUserId = 1;
+
+		when(artWorkDTO.getImageFile()).thenReturn(file);
+		when(artWork.getImageFileName()).thenReturn(fileName);
+		setUpSecurityContext(expectedUserId);
+
+		artWorkService.saveNewArtwork(artWorkDTO, artWork);
+
+		verify(userService).getUserById(expectedUserId);
+		verifyArtWorkPopulated(fileName);
 	}
 
 	@Test
@@ -141,10 +202,7 @@ public class ArtWorkServiceImplUnitTest
 
 		artWorkService.populateAndSaveArtWork(artWorkDTO, artWork);
 
-		verify(artWorkPopulator).populateArtWorkForDTO(artWorkDTO, artWork);
-		verify(artWorkPopulator).populateImage(artWorkDTO, artWork);
-		verify(imageService).saveImage(fileName, file);
-		verify(artWorkDAO).save(artWork);
+		verifyArtWorkPopulated(fileName);
 	}
 
 	@Test
@@ -174,6 +232,23 @@ public class ArtWorkServiceImplUnitTest
 		artWork.setImageFileName("");
 
 		return artWork;
+	}
+
+	private void verifyArtWorkPopulated(final String fileName)
+	{
+		verify(artWorkPopulator).populateArtWorkForDTO(artWorkDTO, artWork);
+		verify(artWorkPopulator).populateImage(artWorkDTO, artWork);
+		verify(imageService).saveImage(fileName, file);
+		verify(artWorkDAO).save(artWork);
+	}
+
+	private void setUpSecurityContext(final int expectedUserId)
+	{
+		when(context.getAuthentication()).thenReturn(auth);
+		when(auth.getPrincipal()).thenReturn(myUserDetails);
+		when(myUserDetails.getUser()).thenReturn(user);
+		when(user.getId()).thenReturn(expectedUserId);
+		SecurityContextHolder.setContext(context);
 	}
 
 }

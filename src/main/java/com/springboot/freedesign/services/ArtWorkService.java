@@ -14,11 +14,13 @@ public interface ArtWorkService
 
 	ArtWork findById(final String id);
 
+	void saveNewArtwork(final ArtWorkDTO artWorkDTO, final ArtWork artWork);
+
 	void populateAndSaveArtWork(final ArtWorkDTO artWorkDTO, final ArtWork artWork);
 
-	ArtWorkDTO getCreatedDtoForArtWork(final ArtWork artWork);
-
 	void updateArtWorkNoNewImage(final ArtWorkDTO artWorkDTO, final ArtWork artWork);
+
+	ArtWorkDTO getCreatedDtoForArtWork(final ArtWork artWork);
 
 	void deleteAll();
 }
