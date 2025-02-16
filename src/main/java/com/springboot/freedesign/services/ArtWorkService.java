@@ -22,5 +22,5 @@ public interface ArtWorkService
 
 	ArtWorkDTO getCreatedDtoForArtWork(final ArtWork artWork);
 
-	void deleteAll();
+	void deleteAllByUser();
 }

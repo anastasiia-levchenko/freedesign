@@ -7,14 +7,12 @@ import com.springboot.freedesign.exceptions.exceptions.ArtWorkNotFoundException;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkParsingException;
 import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.populators.ArtWorkPopulator;
-import com.springboot.freedesign.security.MyUserDetails;
 import com.springboot.freedesign.services.ArtWorkService;
 import com.springboot.freedesign.services.ImageService;
 import com.springboot.freedesign.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,18 +27,18 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	private UserService userService;
 
 	@Autowired
-	private ArtWorkDAO artWorkDAO;
-
-	@Autowired
 	private ArtWorkPopulator artWorkPopulator;
 
 	@Autowired
 	private ImageService imageService;
 
+	@Autowired
+	private ArtWorkDAO artWorkDAO;
+
 	@Override
 	public List<ArtWork> getCreatedArtWorks()
 	{
-		return artWorkDAO.findByUserId(getCurrentSessionUserId());
+		return artWorkDAO.findByUserId(userService.getCurrentSessionUserId());
 	}
 
 	@Override
@@ -61,16 +59,17 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	}
 
 	@Override
-	public void deleteAll()
+	public void deleteAllByUser()
 	{
-		deleteImagesByArtWorks(artWorkDAO.findAll());
-		artWorkDAO.deleteAll();
+		final List<ArtWork> artWorksByUser = artWorkDAO.findByUserId(userService.getCurrentSessionUserId());
+		deleteImagesByArtWorks(artWorksByUser);
+		artWorkDAO.deleteAll(artWorksByUser);
 	}
 
 	@Override
 	public void saveNewArtwork(final ArtWorkDTO artWorkDTO, final ArtWork artWork)
 	{
-		artWork.setUser(userService.getUserById(getCurrentSessionUserId()));
+		artWork.setUser(userService.getUserById(userService.getCurrentSessionUserId()));
 		populateAndSaveArtWork(artWorkDTO, artWork);
 	}
 
@@ -133,10 +132,5 @@ public class ArtWorkServiceImpl implements ArtWorkService
 		artWorks.forEach(artWork -> imageService.deleteArtWorkRelatedImage(artWork.getImageFileName()));
 	}
 
-	private int getCurrentSessionUserId()
-	{
-		final MyUserDetails currentUserDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-		return currentUserDetails.getUser().getId();
-	}
+
 }

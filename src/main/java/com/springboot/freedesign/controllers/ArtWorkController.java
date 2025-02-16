@@ -55,6 +55,7 @@ public class ArtWorkController
 		logger.info(String.format(FreeDesignConstants.DELETING_ARTWORK, id));
 
 		final ArtWork artWorkToDelete = artWorkService.findById(id);
+		validatorService.validateUserAuthorization(artWorkToDelete.getUser().getId());
 
 		imageService.deleteArtWorkRelatedImage(artWorkToDelete.getImageFileName());
 		artWorkService.deleteById(id);
@@ -67,7 +68,7 @@ public class ArtWorkController
 	{
 		logger.info(FreeDesignConstants.DELETING_ALL_ARTWORKS);
 
-		artWorkService.deleteAll();
+		artWorkService.deleteAllByUser();
 
 		return FreeDesignConstants.REDIRECT_ARTWORKS_PAGE;
 	}
@@ -98,6 +99,7 @@ public class ArtWorkController
 		logger.info(FreeDesignConstants.LAUNCHING_EDIT_PAGE);
 
 		final ArtWork artWorkToUpdate = artWorkService.findById(id);
+		validatorService.validateUserAuthorization(artWorkToUpdate.getUser().getId());
 		final ArtWorkDTO dto = artWorkService.getCreatedDtoForArtWork(artWorkToUpdate);
 
 		model.addAttribute(ART_WORK_DTO, dto);

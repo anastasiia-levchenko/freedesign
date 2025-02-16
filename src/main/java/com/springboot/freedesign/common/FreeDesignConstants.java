@@ -27,6 +27,7 @@ public class FreeDesignConstants
 	public static final String ART_WORK_NOT_FOUND = "Art Work was not found by the provided Id";
 	public static final String EXPORT_ERROR = "Something went wrong while exporting the Art Works";
 	public static final String PARSING_FAILED = "Failed to parse the provided data";
+	public static final String USER_HAS_NO_PERMISSION_TO_EDIT = "The current user has no permission to edit or delete the artwork";
 
 	//Roles
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
