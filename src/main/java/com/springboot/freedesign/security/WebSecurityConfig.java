@@ -45,7 +45,7 @@ public class WebSecurityConfig
 
 		httpSecurity.authorizeHttpRequests(
 						auth -> auth.requestMatchers("/admin/**").hasRole("ADMIN")
-								.requestMatchers("/workarts").hasRole("USER")
+								.requestMatchers("/artworks/**").hasRole("USER")
 								.anyRequest()
 								.authenticated()).formLogin((form -> form.successHandler(customSuccessHandler())))
 				.logout(LogoutConfigurer::permitAll)

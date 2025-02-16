@@ -7,6 +7,11 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import java.io.IOException;
 
+import static com.springboot.freedesign.common.FreeDesignConstants.ADMIN_HOME_URL;
+import static com.springboot.freedesign.common.FreeDesignConstants.ARTWORKS;
+import static com.springboot.freedesign.common.FreeDesignConstants.ROLE_ADMIN;
+import static com.springboot.freedesign.common.FreeDesignConstants.ROLE_USER;
+
 
 public class FreeDesignAuthenticationSuccessFilter implements AuthenticationSuccessHandler
 {
@@ -15,8 +20,8 @@ public class FreeDesignAuthenticationSuccessFilter implements AuthenticationSucc
 			final Authentication authentication)
 			throws IOException
 	{
-		final String redirectURL = hasRole(authentication, "ROLE_ADMIN") ? "/admin/home" :
-				hasRole(authentication, "ROLE_USER") ? "/artworks" : request.getContextPath();
+		final String redirectURL = hasRole(authentication, ROLE_ADMIN) ? ADMIN_HOME_URL :
+				hasRole(authentication, ROLE_USER) ? ARTWORKS : request.getContextPath();
 
 		response.sendRedirect(redirectURL);
 	}
