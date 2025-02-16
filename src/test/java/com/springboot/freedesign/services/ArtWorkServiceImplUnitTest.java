@@ -143,7 +143,7 @@ public class ArtWorkServiceImplUnitTest
 	@Test
 	public void verifyDeleteAllDaoMethodWasCalledTest()
 	{
-		artWorkService.deleteAll();
+		artWorkService.deleteAllByUser();
 
 		verify(artWorkDAO).deleteAll();
 	}
@@ -154,7 +154,7 @@ public class ArtWorkServiceImplUnitTest
 		when(artWorkDAO.findAll()).thenReturn(
 				Arrays.asList(getArtWorkWithImageName(), getArtWorkWithImageName(), getArtWorkWithImageName()));
 
-		artWorkService.deleteAll();
+		artWorkService.deleteAllByUser();
 
 		verify(imageService, times(3)).deleteArtWorkRelatedImage(anyString());
 	}

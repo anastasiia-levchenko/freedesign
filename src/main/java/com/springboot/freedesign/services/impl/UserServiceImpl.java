@@ -2,8 +2,10 @@ package com.springboot.freedesign.services.impl;
 
 import com.springboot.freedesign.dao.UserDAO;
 import com.springboot.freedesign.models.User;
+import com.springboot.freedesign.security.MyUserDetails;
 import com.springboot.freedesign.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,14 @@ public class UserServiceImpl implements UserService
 	public User findByUsername(final String username)
 	{
 		return userDAO.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Could not find user by username"));
+	}
+
+	@Override
+	public int getCurrentSessionUserId()
+	{
+		final MyUserDetails currentUserDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		return currentUserDetails.getUser().getId();
 	}
 
 }

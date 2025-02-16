@@ -9,4 +9,5 @@ public interface UserService
 
 	User findByUsername(final String username);
 
+	int getCurrentSessionUserId();
 }

@@ -7,4 +7,6 @@ import org.springframework.validation.BindingResult;
 public interface ValidatorService
 {
 	BindingResult validateCreatedArtWork(final BindingResult result, final ArtWorkDTO artWorksDTO);
+
+	void validateUserAuthorization(final int userId);
 }
