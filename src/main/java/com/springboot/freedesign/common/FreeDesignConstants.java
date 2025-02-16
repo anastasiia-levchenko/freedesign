@@ -7,7 +7,13 @@ public class FreeDesignConstants
 	public static final String ARTWORKS_PAGE = "artworks/userHome";
 	public static final String CREATE_ART_WORK_PAGE = "artworks/create";
 	public static final String EDIT_ART_WORK_PAGE = "artworks/edit";
-	public static final String REDIRECT_ARTWORKS_PAGE = "redirect:/artworks";
+	public static final String REDIRECT = "redirect:";
+	public static final String REDIRECT_ARTWORKS_PAGE = REDIRECT + "/artworks";
+	public static final String ARTWORKS = "/artworks";
+
+	//ADMIN
+	public static final String ADMIN_HOME_PAGE = "admin/adminHome";
+	public static final String ADMIN_HOME_URL = 	"/admin/home";
 
 	//Validation
 	public static final String VALIDATION_EMPTY_FIELD = "This field is required";
@@ -21,6 +27,14 @@ public class FreeDesignConstants
 	public static final String ART_WORK_NOT_FOUND = "Art Work was not found by the provided Id";
 	public static final String EXPORT_ERROR = "Something went wrong while exporting the Art Works";
 	public static final String PARSING_FAILED = "Failed to parse the provided data";
+
+	//Roles
+	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+	public static final String ROLE_USER = "ROLE_USER";
+
+
+	// Error pages
+	public static final String ACCESS_DENIED_PAGE = "error/access-denied";
 
 	// Logger messages
 
