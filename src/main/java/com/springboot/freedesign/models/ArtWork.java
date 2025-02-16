@@ -1,10 +1,13 @@
 package com.springboot.freedesign.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -27,11 +30,16 @@ public class ArtWork
 	@Column(columnDefinition = "TEXT")
 	private String notes;
 
-	public ArtWork(final String name, final BigDecimal price, final boolean wantToSell)
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
+	private User user;
+
+	public ArtWork(final String name, final BigDecimal price, final boolean wantToSell, final User user)
 	{
 		this.name = name;
 		this.price = price;
 		this.wantToSell = wantToSell;
+		this.user = user;
 	}
 
 	public int getId()
@@ -92,5 +100,15 @@ public class ArtWork
 	public void setImageFileName(final String imageFileName)
 	{
 		this.imageFileName = imageFileName;
+	}
+
+	public User getUser()
+	{
+		return user;
+	}
+
+	public void setUser(final User user)
+	{
+		this.user = user;
 	}
 }

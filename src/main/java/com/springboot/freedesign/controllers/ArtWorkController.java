@@ -39,7 +39,7 @@ public class ArtWorkController
 	private ValidatorServiceImpl validatorService;
 
 	@GetMapping({ "", "/" })
-	public String getAllCreatedArtWorks(final Model model)
+	public String getCreatedArtWorksByUser(final Model model)
 	{
 		logger.info(FreeDesignConstants.GETTING_ARTWORKS);
 

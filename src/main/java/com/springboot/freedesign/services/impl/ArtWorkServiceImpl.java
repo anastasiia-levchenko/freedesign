@@ -7,11 +7,13 @@ import com.springboot.freedesign.exceptions.exceptions.ArtWorkNotFoundException;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkParsingException;
 import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.populators.ArtWorkPopulator;
+import com.springboot.freedesign.security.MyUserDetails;
 import com.springboot.freedesign.services.ArtWorkService;
 import com.springboot.freedesign.services.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +35,14 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	@Override
 	public List<ArtWork> getCreatedArtWorks()
 	{
-		return artWorkDAO.findAll();
+		return artWorkDAO.findByUserId(getCurrentUserId());
+	}
+
+	private int getCurrentUserId()
+	{
+		final MyUserDetails currentUserDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		return currentUserDetails.getUser().getId();
 	}
 
 	@Override
