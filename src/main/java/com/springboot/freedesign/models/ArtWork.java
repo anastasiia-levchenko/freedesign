@@ -30,17 +30,9 @@ public class ArtWork
 	@Column(columnDefinition = "TEXT")
 	private String notes;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
 	private User user;
-
-	public ArtWork(final String name, final BigDecimal price, final boolean wantToSell, final User user)
-	{
-		this.name = name;
-		this.price = price;
-		this.wantToSell = wantToSell;
-		this.user = user;
-	}
 
 	public int getId()
 	{

@@ -152,7 +152,7 @@ public class ArtWorkController
 	{
 		logger.info(FreeDesignConstants.CREATING_NEW_ART_WORK);
 
-		artWorkService.populateAndSaveArtWork(artWorksDTO, new ArtWork());
+		artWorkService.saveNewArtwork(artWorksDTO, new ArtWork());
 
 		return FreeDesignConstants.REDIRECT_ARTWORKS_PAGE;
 	}
