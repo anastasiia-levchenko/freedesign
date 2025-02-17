@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import static com.springboot.freedesign.common.FreeDesignConstants.LOGIN_URL;
+
 
 @Configuration
 @EnableWebSecurity
@@ -48,7 +50,7 @@ public class WebSecurityConfig
 								.requestMatchers("/artworks/**").hasRole("USER").requestMatchers("/images/**").permitAll()
 								.anyRequest()
 								.authenticated()).formLogin((form -> form.successHandler(customSuccessHandler()))).formLogin(form -> form
-						.loginPage("/login")
+						.loginPage(LOGIN_URL)
 						.permitAll())
 				.logout(LogoutConfigurer::permitAll)
 				.exceptionHandling((exception) -> exception.accessDeniedPage("/error/accessDenied"));

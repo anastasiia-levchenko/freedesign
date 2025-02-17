@@ -2,6 +2,7 @@ package com.springboot.freedesign.common;
 
 public class FreeDesignConstants
 {
+	public static final String LOGIN_URL = "/login";
 	//Art works
 	public static final String PATH_TO_IMAGES = "public/images/";
 	public static final String ARTWORKS_PAGE = "artworks/userHome";
