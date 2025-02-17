@@ -45,9 +45,11 @@ public class WebSecurityConfig
 
 		httpSecurity.authorizeHttpRequests(
 						auth -> auth.requestMatchers("/admin/**").hasRole("ADMIN")
-								.requestMatchers("/artworks/**").hasRole("USER")
+								.requestMatchers("/artworks/**").hasRole("USER").requestMatchers("/images/**").permitAll()
 								.anyRequest()
-								.authenticated()).formLogin((form -> form.successHandler(customSuccessHandler())))
+								.authenticated()).formLogin((form -> form.successHandler(customSuccessHandler()))).formLogin(form -> form
+						.loginPage("/login")
+						.permitAll())
 				.logout(LogoutConfigurer::permitAll)
 				.exceptionHandling((exception) -> exception.accessDeniedPage("/error/accessDenied"));
 		;
