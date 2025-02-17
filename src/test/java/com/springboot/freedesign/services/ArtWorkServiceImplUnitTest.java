@@ -68,7 +68,7 @@ public class ArtWorkServiceImplUnitTest
 	private SecurityContext context;
 	@Mock
 	private MyUserDetails myUserDetails;
-
+   //TODO:fix tests
 	@Test
 	public void verifyArtWorkDaoFindByUserIdWasCalledTest()
 	{
