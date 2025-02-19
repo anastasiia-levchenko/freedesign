@@ -18,10 +18,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,13 +69,13 @@ public class ArtWorkServiceImplUnitTest
 	private SecurityContext context;
 	@Mock
 	private MyUserDetails myUserDetails;
-   //TODO:fix tests
+
 	@Test
 	public void verifyArtWorkDaoFindByUserIdWasCalledTest()
 	{
-		final int expectedUserId = 1;
+		final int userId = 1;
 
-		setUpSecurityContext(expectedUserId);
+		when(userService.getCurrentSessionUserId()).thenReturn(userId);
 
 		artWorkService.getCreatedArtWorks();
 
@@ -95,10 +96,10 @@ public class ArtWorkServiceImplUnitTest
 	@Test
 	public void unparsableArtWorkIdPassedForDeletionThrowExceptionTest()
 	{
-		final String testIdString = "abc";
+		final String unparsableToInt = "abc";
 
 		assertThrows(ArtWorkParsingException.class, () -> {
-			artWorkService.deleteById(testIdString);
+			artWorkService.deleteById(unparsableToInt);
 		});
 	}
 
@@ -125,38 +126,49 @@ public class ArtWorkServiceImplUnitTest
 	}
 
 	@Test
-	public void verifyNewArtWorkPopulatedAndSavedTest()
-	{
-		final String fileName = "fileName";
-		final int expectedUserId = 1;
-
-		when(artWorkDTO.getImageFile()).thenReturn(file);
-		when(artWork.getImageFileName()).thenReturn(fileName);
-		setUpSecurityContext(expectedUserId);
-
-		artWorkService.saveNewArtwork(artWorkDTO, artWork);
-
-		verify(userService).getUserById(expectedUserId);
-		verifyArtWorkPopulated(fileName);
-	}
-
-	@Test
 	public void verifyDeleteAllDaoMethodWasCalledTest()
 	{
+		final int userId = 1;
+		final List<ArtWork> artWorkList = new ArrayList<>();
+
+		when(userService.getCurrentSessionUserId()).thenReturn(userId);
+		when(artWorkDAO.findByUserId(userId)).thenReturn(artWorkList);
+
 		artWorkService.deleteAllByUser();
 
-		verify(artWorkDAO).deleteAll();
+		verify(artWorkDAO).findByUserId(userId);
+		verify(artWorkDAO).deleteAll(artWorkList);
 	}
 
 	@Test
 	public void verifyImagesDeleteMethodWasCalledThreeTimesTest()
 	{
-		when(artWorkDAO.findAll()).thenReturn(
+		final int userId = 1;
+
+		when(userService.getCurrentSessionUserId()).thenReturn(userId);
+		when(artWorkDAO.findByUserId(userId)).thenReturn(
 				Arrays.asList(getArtWorkWithImageName(), getArtWorkWithImageName(), getArtWorkWithImageName()));
 
 		artWorkService.deleteAllByUser();
 
 		verify(imageService, times(3)).deleteArtWorkRelatedImage(anyString());
+	}
+
+
+	@Test
+	public void verifyNewArtWorkPopulatedAndSavedTest()
+	{
+		final String fileName = "fileName";
+		final int userId = 1;
+
+		when(artWorkDTO.getImageFile()).thenReturn(file);
+		when(artWork.getImageFileName()).thenReturn(fileName);
+		when(userService.getCurrentSessionUserId()).thenReturn(userId);
+
+		artWorkService.saveNewArtwork(artWorkDTO, artWork);
+
+		verify(userService).getUserById(userId);
+		verifyArtWorkPopulated(fileName);
 	}
 
 	@Test
@@ -240,15 +252,6 @@ public class ArtWorkServiceImplUnitTest
 		verify(artWorkPopulator).populateImage(artWorkDTO, artWork);
 		verify(imageService).saveImage(fileName, file);
 		verify(artWorkDAO).save(artWork);
-	}
-
-	private void setUpSecurityContext(final int expectedUserId)
-	{
-		when(context.getAuthentication()).thenReturn(auth);
-		when(auth.getPrincipal()).thenReturn(myUserDetails);
-		when(myUserDetails.getUser()).thenReturn(user);
-		when(user.getId()).thenReturn(expectedUserId);
-		SecurityContextHolder.setContext(context);
 	}
 
 }
