@@ -16,6 +16,10 @@ public interface ArtWorkService
 
 	void saveNewArtwork(final ArtWorkDTO artWorkDTO, final ArtWork artWork);
 
+	void unpublishArtWork(final ArtWork artWork);
+
+	void publishArtWork(final ArtWork artWork);
+
 	void populateAndSaveArtWork(final ArtWorkDTO artWorkDTO, final ArtWork artWork);
 
 	void updateArtWorkNoNewImage(final ArtWorkDTO artWorkDTO, final ArtWork artWork);

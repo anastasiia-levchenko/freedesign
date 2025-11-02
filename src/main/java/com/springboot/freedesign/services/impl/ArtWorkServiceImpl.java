@@ -6,6 +6,7 @@ import com.springboot.freedesign.dao.ArtWorkDAO;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkNotFoundException;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkParsingException;
 import com.springboot.freedesign.models.ArtWork;
+import com.springboot.freedesign.models.enums.ArtWorkStatus;
 import com.springboot.freedesign.populators.ArtWorkPopulator;
 import com.springboot.freedesign.services.ArtWorkService;
 import com.springboot.freedesign.services.ImageService;
@@ -80,6 +81,20 @@ public class ArtWorkServiceImpl implements ArtWorkService
 		artWorkPopulator.populateImage(artWorkDTO, artWork);
 
 		saveArtWork(artWorkDTO, artWork);
+	}
+
+	@Override
+	public void publishArtWork(final ArtWork artWork) {
+		artWork.setStatus(ArtWorkStatus.PUBLISHED);
+		artWorkDAO.save(artWork);
+		logger.info("Artwork {} published successfully", artWork.getId());
+	}
+
+	@Override
+	public void unpublishArtWork(final ArtWork artWork) {
+		artWork.setStatus(ArtWorkStatus.DRAFT);
+		artWorkDAO.save(artWork);
+		logger.info("Artwork {} unpublished successfully", artWork.getId());
 	}
 
 	@Override

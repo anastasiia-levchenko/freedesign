@@ -1,8 +1,10 @@
 package com.springboot.freedesign.models;
 
-import jakarta.persistence.CascadeType;
+import com.springboot.freedesign.models.enums.ArtWorkStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 
@@ -25,8 +28,10 @@ public class ArtWork
 	private int id;
 	private String name;
 	private BigDecimal price;
-	private boolean wantToSell;
 	private String imageFileName;
+	@Enumerated(EnumType.STRING)
+	@ColumnDefault("'DRAFT'")
+	private ArtWorkStatus status = ArtWorkStatus.DRAFT;
 	@Column(columnDefinition = "TEXT")
 	private String notes;
 
@@ -64,16 +69,6 @@ public class ArtWork
 		this.price = price;
 	}
 
-	public boolean isWantToSell()
-	{
-		return wantToSell;
-	}
-
-	public void setWantToSell(final boolean wantToSell)
-	{
-		this.wantToSell = wantToSell;
-	}
-
 	public String getNotes()
 	{
 		return notes;
@@ -102,5 +97,15 @@ public class ArtWork
 	public void setUser(final User user)
 	{
 		this.user = user;
+	}
+
+	public ArtWorkStatus getStatus()
+	{
+		return status;
+	}
+
+	public void setStatus(final ArtWorkStatus status)
+	{
+		this.status = status;
 	}
 }

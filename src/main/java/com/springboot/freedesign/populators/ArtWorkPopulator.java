@@ -17,7 +17,6 @@ public class ArtWorkPopulator
 	{
 		artWork.setName(artWorkDTO.getName());
 		artWork.setPrice(artWorkDTO.getPrice());
-		artWork.setWantToSell(artWorkDTO.isWantToSell());
 		artWork.setNotes(artWorkDTO.getNotes());
 	}
 
@@ -32,7 +31,6 @@ public class ArtWorkPopulator
 		artWorkDTO.setId(artWork.getId());
 		artWorkDTO.setName(artWork.getName());
 		artWorkDTO.setPrice(artWork.getPrice());
-		artWorkDTO.setWantToSell(artWork.isWantToSell());
 		artWorkDTO.setNotes(artWork.getNotes());
 	}
 }
