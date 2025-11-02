@@ -8,7 +8,9 @@ services:
       SPRING_DATASOURCE_USER: admin
       SPRING_DATASOURCE_PASSWORD: nimda
     depends_on:
-      - dockermysqldb
+      dockermysqldb:
+        condition: service_completed_successfully
+        restart: true
 
   dockermysqldb:
     image: mysql
@@ -19,3 +21,8 @@ services:
       MYSQL_DATABASE: freedesign
       MYSQL_USER: admin
       MYSQL_PASSWORD: nimda
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:

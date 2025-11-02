@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Free Design</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
@@ -72,9 +73,10 @@
             <th>ID</th>
             <th>Name</th>
             <th>Price</th>
-            <th>Want to sell now</th>
+            <th>Status</th>
             <th>Notes</th>
             <th>Image</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -82,23 +84,44 @@
             <td th:text="${artwork.id}"></td>
             <td th:text="${artwork.name}"></td>
             <td th:text="@{${artwork.price} + '$'}"></td>
-            <td th:text="${artwork.wantToSell} ? 'Yes' : 'No'"></td>
+            <td>
+                <span th:text="${artwork.status}"
+                      th:classappend="${artwork.status?.toString() == 'PUBLISHED'} ? 'badge bg-success' : 'badge bg-secondary'">
+                </span>
+            </td>
             <td th:text="${artwork.notes}"></td>
             <td>
                 <img th:src="@{'/images/' + ${artwork.imageFileName}}"
                      alt="..." width="100" height="100">
             </td>
-            <td style="white-space:nowrap">
-                <a class="btn btn-primary"
-                   th:href="@{/artworks/edit(id=${artwork.id})}">Edit</a>
 
-                <!-- Button trigger delete modal -->
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                        th:attr="data-bs-target='#delete-modal'+${artwork.id}">
-                    Delete
-                </button>
+            <td style="width: 220px;">
+                <div class="d-flex flex-wrap gap-1">
+                    <a class="btn btn-outline-primary btn-sm"
+                       th:href="@{/artworks/edit(id=${artwork.id})}"
+                       th:if="${artwork.status?.toString() == 'DRAFT'}">
+                        Edit
+                    </a>
 
-                <!-- Delete Modal -->
+                    <a class="btn btn-outline-success btn-sm"
+                       th:href="@{/artworks/publish(id=${artwork.id})}"
+                       th:if="${artwork.status?.toString() == 'DRAFT'}">
+                        Publish
+                    </a>
+
+                    <a class="btn btn-outline-warning btn-sm"
+                       th:href="@{/artworks/unpublish(id=${artwork.id})}"
+                       th:if="${artwork.status?.toString() == 'PUBLISHED'}">
+                        Unpublish
+                    </a>
+
+                    <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+                            th:attr="data-bs-target='#delete-modal'+${artwork.id}">
+                        Delete
+                    </button>
+                </div>
+
+                <!-- Delete Modal ДОЛЖЕН БЫТЬ ЗДЕСЬ, внутри td -->
                 <div class="modal fade bd-example-modal-sm" th:id="delete-modal+${artwork.id}" tabindex="-1"
                      aria-labelledby="deleteModalLabel"
                      aria-hidden="true">
@@ -130,6 +153,3 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>
-
-
-

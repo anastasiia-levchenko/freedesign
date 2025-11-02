@@ -108,7 +108,6 @@ public class ExcelExportStrategyImpl implements ExportStrategy
 			createCell(row, columnCount++, artWork.getId(), style);
 			createCell(row, columnCount++, artWork.getName(), style);
 			createCell(row, columnCount++, artWork.getPrice().toString(), style);
-			createCell(row, columnCount++, artWork.isWantToSell(), style);
 			createCell(row, columnCount++, artWork.getImageFileName(), style);
 			createCell(row, columnCount, artWork.getNotes(), style);
 		}

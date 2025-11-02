@@ -48,8 +48,8 @@ public class CSVExportStrategyImpl implements ExportStrategy
 
 		final List<ArtWork> artWorks = artWorkService.getCreatedArtWorks();
 
-		final String[] csvHeader = { "ID", "Name", "Price", "Wish to sell", "Image Name", "Notes" };
-		final String[] nameMapping = { "id", "name", "price", "wantToSell", "imageFileName", "notes" };
+		final String[] csvHeader = { "ID", "Name", "Price", "Image Name", "Notes" };
+		final String[] nameMapping = { "id", "name", "price", "imageFileName", "notes" };
 
 		try
 		{

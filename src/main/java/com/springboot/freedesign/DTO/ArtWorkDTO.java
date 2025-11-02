@@ -1,6 +1,7 @@
 package com.springboot.freedesign.DTO;
 
 import com.springboot.freedesign.common.FreeDesignConstants;
+import com.springboot.freedesign.models.enums.ArtWorkStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -20,10 +21,8 @@ public class ArtWorkDTO
 	@Min(0)
 	@NotNull(message = FreeDesignConstants.VALIDATION_PRICE_ERROR)
 	private BigDecimal price;
-
-	private boolean wantToSell;
-
 	private MultipartFile imageFile;
+	private ArtWorkStatus status;
 
 	@NotEmpty(message = FreeDesignConstants.VALIDATION_EMPTY_FIELD)
 	@Size(max = 1000, message = VALIDATION_TEXT_SIZE_EXCEEDS + "1000")
@@ -47,16 +46,6 @@ public class ArtWorkDTO
 	public void setPrice(final BigDecimal price)
 	{
 		this.price = price;
-	}
-
-	public boolean isWantToSell()
-	{
-		return wantToSell;
-	}
-
-	public void setWantToSell(final boolean wantToSell)
-	{
-		this.wantToSell = wantToSell;
 	}
 
 	public MultipartFile getImageFile()
@@ -87,5 +76,13 @@ public class ArtWorkDTO
 	public void setId(final int id)
 	{
 		this.id = id;
+	}
+	public ArtWorkStatus getStatus()
+	{
+		return status;
+	}
+	public void setStatus(final ArtWorkStatus status)
+	{
+		this.status = status;
 	}
 }
