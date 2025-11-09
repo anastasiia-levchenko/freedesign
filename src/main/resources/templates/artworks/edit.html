@@ -31,13 +31,13 @@
                 </h2>
             </div>
             <div class="card-body p-4">
-                <form method="post" enctype="multipart/form-data" th:object="${artWorkDTO}">
+                <form method="post" enctype="multipart/form-data" th:object="${artWorkUploadDTO}">
 
                     <!-- ID Field -->
                     <div class="row mb-4">
                         <label class="col-sm-3 col-form-label fw-semibold">Artwork ID</label>
                         <div class="col-sm-9">
-                            <input readonly class="form-control-plaintext text-muted" th:value="${artWorkDTO.id}">
+                            <input readonly class="form-control-plaintext text-muted" th:value="${artWorkUploadDTO.id}">
                         </div>
                     </div>
 
@@ -89,7 +89,7 @@
                             <div class="image-preview">
                                 <img th:src="@{'/images/' + ${artwork.imageFileName}}"
                                      class="img-fluid rounded" style="max-height: 200px;"
-                                     th:alt="${artWorkDTO.name}">
+                                     th:alt="${artWorkUploadDTO.name}">
                                 <div class="mt-2 text-muted small">
                                     Current artwork image
                                 </div>

@@ -1,6 +1,6 @@
 package com.springboot.freedesign.services.impl;
 
-import com.springboot.freedesign.DTO.ArtWorkDTO;
+import com.springboot.freedesign.DTO.ArtWorkUploadDTO;
 import com.springboot.freedesign.common.FreeDesignConstants;
 import com.springboot.freedesign.exceptions.exceptions.UserHasNoPermissionToEdit;
 import com.springboot.freedesign.services.UserService;
@@ -22,7 +22,7 @@ public class ValidatorServiceImpl implements ValidatorService
 	private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
 	@Override
-	public BindingResult validateCreatedArtWork(final BindingResult result, final ArtWorkDTO artWorksDTO)
+	public BindingResult validateCreatedArtWork(final BindingResult result, final ArtWorkUploadDTO artWorksDTO)
 	{
 		checkIfImageIsAttached(result, artWorksDTO.getImageFile());
 

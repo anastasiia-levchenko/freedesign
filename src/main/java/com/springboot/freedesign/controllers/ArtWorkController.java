@@ -1,6 +1,7 @@
 package com.springboot.freedesign.controllers;
 
-import com.springboot.freedesign.DTO.ArtWorkDTO;
+import com.springboot.freedesign.DTO.ArtWorkUploadDTO;
+import com.springboot.freedesign.DTO.ArtWorkViewDTO;
 import com.springboot.freedesign.common.FreeDesignConstants;
 import com.springboot.freedesign.models.ArtWork;
 import com.springboot.freedesign.services.ArtWorkService;
@@ -27,7 +28,7 @@ import java.util.List;
 public class ArtWorkController
 {
 	private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-	private static final String ART_WORK_DTO = "artWorkDTO";
+	private static final String ART_WORK_UPLOAD_DTO = "artWorkUploadDTO";
 	private static final String ARTWORK = "artwork";
 	private static final String ID = "id";
 
@@ -44,7 +45,9 @@ public class ArtWorkController
 		logger.info(FreeDesignConstants.GETTING_ARTWORKS);
 
 		final List<ArtWork> artWorks = artWorkService.getCreatedArtWorks();
-		model.addAttribute("artworks", artWorks);
+		final List<ArtWorkViewDTO> dtos = artWorkService.getViewDtos(artWorks);
+
+		model.addAttribute("artworks", dtos);
 
 		return FreeDesignConstants.ARTWORKS_PAGE;
 	}
@@ -84,7 +87,7 @@ public class ArtWorkController
 	}
 
 	@PostMapping("/create")
-	public String createArtWork(@Valid @ModelAttribute final ArtWorkDTO artWorksDTO, BindingResult result)
+	public String createArtWork(@Valid @ModelAttribute final ArtWorkUploadDTO artWorksDTO, BindingResult result)
 	{
 		logger.info(FreeDesignConstants.VALIDATE_ARTWORK_ATTRIBUTES);
 
@@ -124,16 +127,16 @@ public class ArtWorkController
 
 		final ArtWork artWorkToUpdate = artWorkService.findById(id);
 		validatorService.validateUserAuthorization(artWorkToUpdate.getUser().getId());
-		final ArtWorkDTO dto = artWorkService.getCreatedDtoForArtWork(artWorkToUpdate);
+		final ArtWorkUploadDTO dto = artWorkService.getCreatedDtoForArtWork(artWorkToUpdate);
 
-		model.addAttribute(ART_WORK_DTO, dto);
+		model.addAttribute(ART_WORK_UPLOAD_DTO, dto);
 		model.addAttribute(ARTWORK, artWorkToUpdate);
 
 		return FreeDesignConstants.EDIT_ART_WORK_PAGE;
 	}
 
 	@PostMapping("/edit")
-	public String editArtWork(@Valid @ModelAttribute final ArtWorkDTO artWorksDTO, BindingResult result, Model model,
+	public String editArtWork(@Valid @ModelAttribute final ArtWorkUploadDTO artWorksDTO, BindingResult result, Model model,
 			@RequestParam(name = ID) final String id)
 	{
 		logger.info(String.format(FreeDesignConstants.TRYING_TO_UPDATE, id));
@@ -144,7 +147,7 @@ public class ArtWorkController
 		return result.hasErrors() ? FreeDesignConstants.EDIT_ART_WORK_PAGE : editWorkArt(artWorkToUpdate, artWorksDTO);
 	}
 
-	private String editWorkArt(final ArtWork artWorkToUpdate, final ArtWorkDTO artWorksDTO)
+	private String editWorkArt(final ArtWork artWorkToUpdate, final ArtWorkUploadDTO artWorksDTO)
 	{
 		logger.info(String.format(FreeDesignConstants.UPDATING_ARTWORK, artWorkToUpdate.getId()));
 
@@ -162,19 +165,18 @@ public class ArtWorkController
 		return FreeDesignConstants.REDIRECT_ARTWORKS_PAGE;
 	}
 
-	private boolean isArtWorkImageBeingUpdated(final ArtWorkDTO artWorksDTO)
+	private boolean isArtWorkImageBeingUpdated(final ArtWorkUploadDTO artWorksDTO)
 	{
 		return !artWorksDTO.getImageFile().isEmpty();
 	}
 
 	private void createEmptyTemplate(final Model model)
 	{
-		final ArtWorkDTO dto = new ArtWorkDTO();
-		model.addAttribute(ART_WORK_DTO, dto);
+		final ArtWorkUploadDTO dto = new ArtWorkUploadDTO();
+		model.addAttribute(ART_WORK_UPLOAD_DTO, dto);
 	}
 
-
-	private String createNewArtWork(final ArtWorkDTO artWorksDTO)
+	private String createNewArtWork(final ArtWorkUploadDTO artWorksDTO)
 	{
 		logger.info(FreeDesignConstants.CREATING_NEW_ART_WORK);
 

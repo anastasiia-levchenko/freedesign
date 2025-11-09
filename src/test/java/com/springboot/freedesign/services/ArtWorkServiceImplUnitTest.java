@@ -1,6 +1,6 @@
 package com.springboot.freedesign.services;
 
-import com.springboot.freedesign.DTO.ArtWorkDTO;
+import com.springboot.freedesign.DTO.ArtWorkUploadDTO;
 import com.springboot.freedesign.dao.ArtWorkDAO;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkNotFoundException;
 import com.springboot.freedesign.exceptions.exceptions.ArtWorkParsingException;
@@ -51,8 +51,7 @@ public class ArtWorkServiceImplUnitTest
 	@Mock
 	private ArtWorkDAO artWorkDAO;
 	@Mock
-	private ArtWorkDTO artWorkDTO;
-
+	private ArtWorkUploadDTO artWorkUploadDTO;
 	@Mock
 	private ArtWorkPopulator artWorkPopulator;
 
@@ -161,11 +160,11 @@ public class ArtWorkServiceImplUnitTest
 		final String fileName = "fileName";
 		final int userId = 1;
 
-		when(artWorkDTO.getImageFile()).thenReturn(file);
+		when(artWorkUploadDTO.getImageFile()).thenReturn(file);
 		when(artWork.getImageFileName()).thenReturn(fileName);
 		when(userService.getCurrentSessionUserId()).thenReturn(userId);
 
-		artWorkService.saveNewArtwork(artWorkDTO, artWork);
+		artWorkService.saveNewArtwork(artWorkUploadDTO, artWork);
 
 		verify(userService).getUserById(userId);
 		verifyArtWorkPopulated(fileName);
@@ -209,10 +208,10 @@ public class ArtWorkServiceImplUnitTest
 	public void verifyArtWorkPopulatedAndSavedTest()
 	{
 		final String fileName = "fileName";
-		when(artWorkDTO.getImageFile()).thenReturn(file);
+		when(artWorkUploadDTO.getImageFile()).thenReturn(file);
 		when(artWork.getImageFileName()).thenReturn(fileName);
 
-		artWorkService.populateAndSaveArtWork(artWorkDTO, artWork);
+		artWorkService.populateAndSaveArtWork(artWorkUploadDTO, artWork);
 
 		verifyArtWorkPopulated(fileName);
 	}
@@ -220,9 +219,9 @@ public class ArtWorkServiceImplUnitTest
 	@Test
 	public void verifyArtWorkUpdatedTest()
 	{
-		artWorkService.updateArtWorkNoNewImage(artWorkDTO, artWork);
+		artWorkService.updateArtWorkNoNewImage(artWorkUploadDTO, artWork);
 
-		verify(artWorkPopulator).populateArtWorkForDTO(artWorkDTO, artWork);
+		verify(artWorkPopulator).populateArtWorkForDTO(artWorkUploadDTO, artWork);
 		verify(artWorkDAO).save(artWork);
 	}
 
@@ -233,7 +232,7 @@ public class ArtWorkServiceImplUnitTest
 
 		artWorkService.getCreatedDtoForArtWork(artWorkParam);
 
-		verify(artWorkPopulator).populateDtoForArkWork(isA(ArtWorkDTO.class), eq(artWorkParam));
+		verify(artWorkPopulator).convertToDto(eq(artWorkParam));
 	}
 
 
@@ -248,8 +247,8 @@ public class ArtWorkServiceImplUnitTest
 
 	private void verifyArtWorkPopulated(final String fileName)
 	{
-		verify(artWorkPopulator).populateArtWorkForDTO(artWorkDTO, artWork);
-		verify(artWorkPopulator).populateImage(artWorkDTO, artWork);
+		verify(artWorkPopulator).populateArtWorkForDTO(artWorkUploadDTO, artWork);
+		verify(artWorkPopulator).populateImage(artWorkUploadDTO, artWork);
 		verify(imageService).saveImage(fileName, file);
 		verify(artWorkDAO).save(artWork);
 	}
