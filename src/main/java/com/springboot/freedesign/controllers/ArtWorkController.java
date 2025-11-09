@@ -93,8 +93,8 @@ public class ArtWorkController
 		return validationResult.hasErrors() ? FreeDesignConstants.CREATE_ART_WORK_PAGE : createNewArtWork(artWorksDTO);
 	}
 
-	@GetMapping("/publish")
-	public String publishArtWork(@RequestParam(name = "id") final String id) {
+	@GetMapping("/submit-for-review")
+	public String submitForReview(@RequestParam(name = "id") final String id) {
 		logger.info("Publishing artwork with id: {}", id);
 
 		final ArtWork artWork = artWorkService.findById(id);
@@ -105,9 +105,9 @@ public class ArtWorkController
 		return FreeDesignConstants.REDIRECT_ARTWORKS_PAGE;
 	}
 
-	@GetMapping("/unpublish")
-	public String unpublishArtWork(@RequestParam(name = "id") final String id) {
-		logger.info("Unpublishing artwork with id: {}", id);
+	@GetMapping("/withdraw")
+	public String withdrawArtWork(@RequestParam(name = "id") final String id) {
+		logger.info("Withdrawing artwork with id: {}", id);
 
 		final ArtWork artWork = artWorkService.findById(id);
 		validatorService.validateUserAuthorization(artWork.getUser().getId());
