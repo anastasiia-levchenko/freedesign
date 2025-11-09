@@ -1,0 +1,94 @@
+/* Common Artworks Styles */
+
+/* Card Styles */
+.artwork-card {
+    transition: transform 0.2s;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.artwork-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+.artwork-image {
+    height: 200px;
+    object-fit: cover;
+}
+.status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.action-buttons {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.artwork-card:hover .action-buttons {
+    opacity: 1;
+}
+
+/* Status colors */
+.status-draft { background-color: #6c757d !important; }
+.status-pending { background-color: #ffc107 !important; color: #000 !important; }
+.status-approved { background-color: #198754 !important; }
+.status-rejected { background-color: #dc3545 !important; }
+
+/* Form Styles */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.image-preview {
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+}
+.upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: border-color 0.3s;
+}
+.upload-area:hover {
+    border-color: #667eea;
+}
+
+/* Button Styles */
+.btn-submit, .btn-create {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 600;
+    color: white !important;
+}
+.btn-submit:hover, .btn-create:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    color: white;
+}
+
+/* Form Focus Styles */
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Header Styles */
+.card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border-bottom: none !important;
+}
+
+.card-header h2,
+.card-header h4 {
+    color: white !important;
+    margin: 0;
+}
+
+.navbar-brand {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

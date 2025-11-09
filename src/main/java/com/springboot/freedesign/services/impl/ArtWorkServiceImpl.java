@@ -85,7 +85,7 @@ public class ArtWorkServiceImpl implements ArtWorkService
 
 	@Override
 	public void publishArtWork(final ArtWork artWork) {
-		artWork.setStatus(ArtWorkStatus.PUBLISHED);
+		artWork.setStatus(ArtWorkStatus.PENDING_REVIEW);
 		artWorkDAO.save(artWork);
 		logger.info("Artwork {} published successfully", artWork.getId());
 	}

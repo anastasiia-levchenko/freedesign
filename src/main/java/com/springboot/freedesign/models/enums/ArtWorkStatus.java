@@ -2,5 +2,5 @@ package com.springboot.freedesign.models.enums;
 
 public enum ArtWorkStatus
 {
-	DRAFT, PUBLISHED, ARCHIVED
+	DRAFT, PENDING_REVIEW, APPROVED, REJECTED
 }

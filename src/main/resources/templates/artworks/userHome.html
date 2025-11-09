@@ -1,155 +1,200 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Free Design</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Artworks - Free Design</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/artworks.css?v=1.0" rel="stylesheet">
 </head>
-<body>
-<div class="container">
-
-    <h1 class="text-center my-4">Welcome to Free Design website</h1>
-    <div sec:authorize="isAuthenticated()">
-        Welcome, <span sec:authentication="name"/>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/">🎨 Free Design</a>
+    <div class="navbar-nav ms-auto">
+            <span class="navbar-text me-3">
+                Welcome, <span sec:authentication="name" class="fw-bold"></span>
+            </span>
+      <form th:action="@{/logout}" method="post" class="d-inline">
+        <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+      </form>
     </div>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Logout"/>
-    </form>
+  </div>
+</nav>
 
-    <!-- Button trigger delete all modal -->
-    <button type="button" th:disabled="${artworks.empty}" class="btn btn-danger float-end" data-bs-toggle="modal"
-            data-bs-target="#deleteAllModal">
-        Delete all
-    </button>
-
-    <!-- Delete All Modal -->
-    <div class="modal fade bd-example-modal-sm" id="deleteAllModal" tabindex="-1" aria-labelledby="deleteAllModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteAllModalLabel">Delete all created Art Works?</h1>
-                    <button id="closeDeleteAll" type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <a class="btn btn-primary text-right" th:href="@{/artworks/deleteAll}">Proceed</a>
-                    <a class="btn btn-secondary text-right" data-bs-dismiss="modal">Close</a>
-                </div>
-            </div>
+<div class="container py-4">
+  <!-- Header with Stats -->
+  <div class="row mb-4">
+    <div class="col">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="h3 fw-bold text-dark">My Artworks</h1>
+          <p class="text-muted" th:text="'Total: ' + ${artworks.size()} + ' artwork(s)'"></p>
         </div>
-    </div>
-    <a class="btn btn-primary" href="/artworks/create">Add Art Work</a>
+        <div class="btn-group">
+          <a class="btn btn-primary" href="/artworks/create">
+            <i class="bi bi-plus-circle"></i> Add New Artwork
+          </a>
 
-    <!-- Button trigger export modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exportModal">
-        Export
-    </button>
+          <!-- Export Dropdown -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+              <i class="bi bi-download"></i> Export
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" th:href="@{/artworks/export(exportId='xlsx')}">Export to Excel</a></li>
+              <li><a class="dropdown-item" th:href="@{/artworks/export(exportId='csv')}">Export to CSV</a></li>
+            </ul>
+          </div>
 
-    <!-- Export Modal -->
-    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exportModalLabel">Export Created Art Works</h1>
-                    <button id="close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <a class="btn btn-primary text-right" th:href="@{/artworks/export(exportId='xlsx')}">Export to Excel</a>
-                    <a class="btn btn-primary text-right" th:href="@{/artworks/export(exportId='csv')}">Export to CSV</a>
-                </div>
-            </div>
+          <!-- Delete All Button -->
+          <button type="button" th:disabled="${artworks.empty}" class="btn btn-outline-danger"
+                  data-bs-toggle="modal" data-bs-target="#deleteAllModal">
+            <i class="bi bi-trash"></i> Delete All
+          </button>
         </div>
+      </div>
     </div>
+  </div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Notes</th>
-            <th>Image</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="artwork : ${artworks}">
-            <td th:text="${artwork.id}"></td>
-            <td th:text="${artwork.name}"></td>
-            <td th:text="@{${artwork.price} + '$'}"></td>
-            <td>
-                <span th:text="${artwork.status}"
-                      th:classappend="${artwork.status?.toString() == 'PUBLISHED'} ? 'badge bg-success' : 'badge bg-secondary'">
-                </span>
-            </td>
-            <td th:text="${artwork.notes}"></td>
-            <td>
-                <img th:src="@{'/images/' + ${artwork.imageFileName}}"
-                     alt="..." width="100" height="100">
-            </td>
+  <!-- Artworks Grid -->
+  <div class="row g-4" th:if="${!artworks.empty}">
+    <div class="col-12 col-sm-6 col-lg-4" th:each="artwork, i : ${artworks}">
+      <div class="card artwork-card h-100">
+        <div class="position-relative">
+          <img th:src="@{'/images/' + ${artwork.imageFileName}}"
+               class="card-img-top artwork-image"
+               th:alt="${artwork.name}">
+          <!-- APPROVED = PUBLISHED -->
+          <span th:if="${artwork.status?.toString() == 'APPROVED'}"
+                class="badge bg-success status-badge">PUBLISHED</span>
 
-            <td style="width: 220px;">
-                <div class="d-flex flex-wrap gap-1">
-                    <a class="btn btn-outline-primary btn-sm"
-                       th:href="@{/artworks/edit(id=${artwork.id})}"
-                       th:if="${artwork.status?.toString() == 'DRAFT'}">
-                        Edit
-                    </a>
+          <!-- PENDING_REVIEW -->
+          <span th:if="${artwork.status?.toString() == 'PENDING_REVIEW'}"
+                class="badge bg-warning status-badge">UNDER REVIEW</span>
 
-                    <a class="btn btn-outline-success btn-sm"
-                       th:href="@{/artworks/publish(id=${artwork.id})}"
-                       th:if="${artwork.status?.toString() == 'DRAFT'}">
-                        Publish
-                    </a>
+          <!-- REJECTED -->
+          <span th:if="${artwork.status?.toString() == 'REJECTED'}"
+                class="badge bg-danger status-badge"
+                th:text="${artwork.status}"></span>
 
-                    <a class="btn btn-outline-warning btn-sm"
-                       th:href="@{/artworks/unpublish(id=${artwork.id})}"
-                       th:if="${artwork.status?.toString() == 'PUBLISHED'}">
-                        Unpublish
-                    </a>
+          <!-- DRAFT -->
+          <span th:if="${artwork.status?.toString() == 'DRAFT'}"
+                class="badge bg-secondary status-badge"
+                th:text="${artwork.status}"></span>
+        </div>
 
-                    <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                            th:attr="data-bs-target='#delete-modal'+${artwork.id}">
-                        Delete
-                    </button>
-                </div>
+        <div class="card-body">
+          <h5 class="card-title" th:text="${artwork.name}"></h5>
+          <p class="card-text text-muted small" th:text="${artwork.notes}"></p>
 
-                <!-- Delete Modal ДОЛЖЕН БЫТЬ ЗДЕСЬ, внутри td -->
-                <div class="modal fade bd-example-modal-sm" th:id="delete-modal+${artwork.id}" tabindex="-1"
-                     aria-labelledby="deleteModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-sm">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5">Delete this artwork?</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div style="margin-left: 20px">
-                                <img th:src="@{'/images/' + ${artwork.imageFileName}}"
-                                     alt="..." width="100" height="100">
-                            </div>
-                            <div class="modal-body">
-                                <a class="btn btn-danger text-right"
-                                   th:href="@{/artworks/delete(id=${artwork.id})}">Delete</a>
-                                <a class="btn btn-secondary text-right" data-bs-dismiss="modal">Close</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="h5 text-primary mb-0" th:text="'$' + ${artwork.price}"></span>
+            <div class="action-buttons">
+              <div class="btn-group btn-group-sm">
+                <!-- Edit (only when in DRAFT or REJECTED state)-->
+                <a class="btn btn-outline-primary"
+                   th:href="@{/artworks/edit(id=${artwork.id})}"
+                   th:if="${artwork.status?.toString() == 'DRAFT' or artwork.status?.toString() == 'REJECTED'}"
+                   title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </a>
+
+                <!-- Submit for Review -->
+                <a class="btn btn-outline-success"
+                   th:href="@{/artworks/submit-for-review(id=${artwork.id})}"
+                   th:if="${artwork.status?.toString() == 'DRAFT' or artwork.status?.toString() == 'REJECTED'}"
+                   title="Submit for Review">
+                  <i class="bi bi-send-check"></i>
+                </a>
+
+                <!-- Withdraw -->
+                <a class="btn btn-outline-warning"
+                   th:href="@{/artworks/withdraw(id=${artwork.id})}"
+                   th:if="${artwork.status?.toString() == 'APPROVED' or artwork.status?.toString() == 'PENDING_REVIEW'}"
+                   title="Return to Draft">
+                  <i class="bi bi-arrow-return-left"></i>
+                </a>
+
+                <!-- Delete -->
+                <button type="button" class="btn btn-outline-danger"
+                        data-bs-toggle="modal"
+                        th:attr="data-bs-target='#delete-modal'+${artwork.id}"
+                        title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Modal for this artwork -->
+      <div class="modal fade" th:id="delete-modal+${artwork.id}" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete Artwork</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+              <img th:src="@{'/images/' + ${artwork.imageFileName}}"
+                   class="img-fluid rounded mb-3" style="max-height: 200px;">
+              <p>Are you sure you want to delete "<strong th:text="${artwork.name}"></strong>"?</p>
+              <p class="text-muted">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <a class="btn btn-danger" th:href="@{/artworks/delete(id=${artwork.id})}">
+                Delete Artwork
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="text-center py-5" th:if="${artworks.empty}">
+    <div class="mb-4">
+      <i class="bi bi-palette display-1 text-muted"></i>
+    </div>
+    <h3 class="text-muted">No artworks yet</h3>
+    <p class="text-muted mb-4">Start by creating your first masterpiece!</p>
+    <a class="btn btn-primary btn-lg" href="/artworks/create">
+      <i class="bi bi-plus-circle"></i> Create Your First Artwork
+    </a>
+  </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<!-- Delete All Modal -->
+<div class="modal fade" id="deleteAllModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete All Artworks</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-warning">
+          <i class="bi bi-exclamation-triangle"></i>
+          This will permanently delete all your artworks. This action cannot be undone.
+        </div>
+        <p>Are you absolutely sure?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-danger" th:href="@{/artworks/deleteAll}">
+          Delete All Artworks
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
