@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import static com.springboot.freedesign.common.FreeDesignConstants.VALIDATION_TEXT_SIZE_EXCEEDS;
 
 
-public class ArtWorkDTO
+public class ArtWorkUploadDTO
 {
 	private int id;
 	@NotEmpty(message = FreeDesignConstants.VALIDATION_EMPTY_FIELD)

@@ -2,6 +2,7 @@ package com.springboot.freedesign.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,10 +13,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import static com.springboot.freedesign.common.FreeDesignConstants.LOGIN_URL;
+import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
 
 
 @Configuration
 @EnableWebSecurity
+@EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class WebSecurityConfig
 {
 	@Bean
@@ -44,10 +47,11 @@ public class WebSecurityConfig
 	public SecurityFilterChain filterChain(final HttpSecurity httpSecurity) throws Exception
 	{
 		httpSecurity.authenticationProvider(authenticationProvider());
-
 		httpSecurity.authorizeHttpRequests(
 						auth -> auth.requestMatchers("/admin/**").hasRole("ADMIN")
-								.requestMatchers("/artworks/**").hasRole("USER").requestMatchers("/images/**").permitAll()
+								.requestMatchers("/artworks/**").hasRole("USER")
+								.requestMatchers("/api/v1/marketplace/**").permitAll()
+								.requestMatchers("/images/**").permitAll()
 								.anyRequest()
 								.authenticated()).formLogin((form -> form.successHandler(customSuccessHandler()))).formLogin(form -> form
 						.loginPage(LOGIN_URL)

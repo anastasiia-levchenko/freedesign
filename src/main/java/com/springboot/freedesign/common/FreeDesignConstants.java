@@ -34,6 +34,8 @@ public class FreeDesignConstants
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_USER = "ROLE_USER";
 
+	// Marketplace
+	public static final String MARKETPLACE_PAGE = "marketplace";
 
 	// Error pages
 	public static final String ACCESS_DENIED_PAGE = "error/access-denied";
