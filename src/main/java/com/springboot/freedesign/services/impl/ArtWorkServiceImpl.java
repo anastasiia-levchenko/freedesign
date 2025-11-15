@@ -73,11 +73,11 @@ public class ArtWorkServiceImpl implements ArtWorkService
 	}
 
 	@Override
-	public Page<ArtWorkUploadDTO> getPublishedArtworks(final int page, final String searchTerm, int size)
+	public Page<ArtWorkViewDTO> getPublishedArtworks(final int page, final String searchTerm, int size)
 	{
-		Pageable pageable = PageRequest.of(page, size);
-		artWorkDAO.searchPublishedArtWorks(pageable, searchTerm);
-		return null;
+		final Pageable pageable = PageRequest.of(page, size);
+		final Page<ArtWork> artworkPage = artWorkDAO.searchPublishedArtWorks(pageable, searchTerm);
+		return artworkPage.map(artWorkPopulator::toViewDto);
 	}
 
 	@Override

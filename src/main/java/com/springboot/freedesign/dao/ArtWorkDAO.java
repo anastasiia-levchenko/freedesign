@@ -16,6 +16,6 @@ public interface ArtWorkDAO extends JpaRepository<ArtWork, Integer>
 {
 	List<ArtWork> findByUserId(int currentUserId);
 
-	@Query("SELECT aw FROM ArtWork aw WHERE aw.status = 'PUBLISHED' AND (aw.name LIKE %:searchTerm% OR aw.notes LIKE %:searchTerm%)")
+	@Query("SELECT aw FROM ArtWork aw WHERE aw.status = 'APPROVED' AND (aw.name LIKE %:searchTerm% OR aw.notes LIKE %:searchTerm%)")
 	Page<ArtWork> searchPublishedArtWorks(Pageable pageable, @Param("searchTerm") String searchTerm);
 }

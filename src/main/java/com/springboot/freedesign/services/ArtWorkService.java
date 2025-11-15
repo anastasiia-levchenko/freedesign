@@ -30,7 +30,7 @@ public interface ArtWorkService
 
 	void deleteAllByUser();
 
-	Page<ArtWorkUploadDTO> getPublishedArtworks(int page, String searchTerm, int size);
+	Page<ArtWorkViewDTO> getPublishedArtworks(int page, String searchTerm, int size);
 
 	List<ArtWorkViewDTO> getViewDtos(List<ArtWork> artWorks);
 }
