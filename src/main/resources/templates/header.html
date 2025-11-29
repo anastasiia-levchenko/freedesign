@@ -1,0 +1,17 @@
+<header th:fragment="header" class="fd-header">
+  <div class="fd-header-container">
+    <a th:href="@{/}" class="fd-logo-link">
+      <img th:src="@{/images/FD_logo.png}" alt="Logo" class="fd-logo-image">
+      <span class="fd-logo-text">Art Marketplace</span>
+    </a>
+
+    <nav class="fd-navigation">
+      <a href="http://localhost:3000" class="fd-nav-link">🎨 MarketPlace</a>
+      <a th:href="@{/cart}" class="fd-nav-link">🛒 Cart</a>
+      <a th:href="@{/artworks}" class="fd-nav-link">🖼️ My Artworks</a>
+      <form th:action="@{/logout}" method="post" style="display: inline;">
+        <button type="submit" class="fd-login-btn">Logout</button>
+      </form>
+    </nav>
+  </div>
+</header>
