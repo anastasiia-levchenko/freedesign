@@ -55,10 +55,9 @@ public class WebSecurityConfig
 								.anyRequest()
 								.authenticated()).formLogin((form -> form.successHandler(customSuccessHandler()))).formLogin(form -> form
 						.loginPage(LOGIN_URL)
-						.permitAll())
+						.permitAll()) .csrf(csrf -> csrf.ignoringRequestMatchers("/logout"))
 				.logout(LogoutConfigurer::permitAll)
 				.exceptionHandling((exception) -> exception.accessDeniedPage("/error/accessDenied"));
-		;
 		return httpSecurity.build();
 	}
 
